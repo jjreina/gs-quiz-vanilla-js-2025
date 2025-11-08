@@ -1,16 +1,23 @@
 import "./style.css";
 
 const TEXT_TITLE = "Quiz Question";
-const TEXT_QUESTION = "What is the capital of France?";
+const TEXT_QUESTION_ARRAY = [
+  "What is the capital of France?",
+  "What is the longest river in the world?",
+  "Who wrote Romeo and Juliet?",
+  "How many planets are there in our solar system?",
+];
 const OPTIONS_ARRAY = ["London", "Berlin", "Paris", "Madrid"];
 const BUTTONS_TEXT_ARRAY = ["Previous", "Next"];
+
+let currentQuestionIndex = 0;
 
 const body = document.querySelector("body");
 
 const h2Title = document.createElement("h2");
 h2Title.textContent = TEXT_TITLE;
 const pQuestion = document.createElement("p");
-pQuestion.textContent = TEXT_QUESTION;
+pQuestion.textContent = TEXT_QUESTION_ARRAY[0];
 
 const divContainer = document.createElement("div");
 divContainer.className = "container";
@@ -40,16 +47,41 @@ const createUl = (textButtons) => {
   return ul;
 };
 
+let buttonsFooter;
 const createFooter = (textButtons) => {
-  textButtons.forEach((textButton) => {
-    divFooter.appendChild(createButton(textButton, "footer-btn"));
+  buttonsFooter = textButtons.map((textButton) => {
+    let button = createButton(textButton, "footer-btn");
+    if (textButton === "Previous") button.disabled = true;
+    divFooter.appendChild(button);
+    return button;
   });
   return divFooter;
 };
 
 divContainer.appendChild(h2Title);
 divContainer.appendChild(pQuestion);
-divContainer.appendChild(createUl(OPTIONS_ARRAY));
+let ulContainer = createUl(OPTIONS_ARRAY);
+divContainer.appendChild(ulContainer);
 divContainer.appendChild(createFooter(BUTTONS_TEXT_ARRAY));
 body.appendChild(divContainer);
 
+// Previous button
+buttonsFooter[0].addEventListener("click", () => {
+  if (currentQuestionIndex > 0) {
+    buttonsFooter[1].disabled = false; // Enable Next button
+    currentQuestionIndex--;
+    pQuestion.textContent = TEXT_QUESTION_ARRAY[currentQuestionIndex];
+    buttonsFooter[0].disabled = currentQuestionIndex === 0;
+  }
+});
+
+// Next button
+buttonsFooter[1].addEventListener("click", () => {
+  if (currentQuestionIndex < TEXT_QUESTION_ARRAY.length - 1) {
+    buttonsFooter[0].disabled = false; // Enable Previous button
+    currentQuestionIndex++;
+    pQuestion.textContent = TEXT_QUESTION_ARRAY[currentQuestionIndex];
+    buttonsFooter[1].disabled =
+      currentQuestionIndex === TEXT_QUESTION_ARRAY.length - 1;
+  }
+});
