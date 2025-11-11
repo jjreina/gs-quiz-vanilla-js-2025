@@ -25,7 +25,10 @@ const mockData = [
 ];
 
 const TEXT_TITLE = "Quiz Question";
+
 const TEXT_BUTTONS_ARRAY = ["Previous", "Next"];
+
+const OPTIOON_SELECTED = "#3CB371";
 
 let currentQuestionIndex = 0;
 
@@ -50,9 +53,12 @@ const createButton = (text, className) => {
   return button;
 };
 
+let optionButtons = [];
 const createLi = (textButton) => {
   const li = document.createElement("li");
-  li.appendChild(createButton(textButton, "answer-btn"));
+  let button = createButton(textButton, "answer-btn");
+  li.appendChild(button);
+  optionButtons.push(button);
   return li;
 };
 
@@ -93,9 +99,14 @@ const setAnswers = (ulContainer, mockData) => {
   });
 };
 
+const resetOptions = () => {
+  optionButtons.forEach((button) => button.removeAttribute("style"));
+};
+
 // Previous button
 buttonsFooter[0].addEventListener("click", () => {
   if (currentQuestionIndex > 0) {
+    resetOptions();
     buttonsFooter[1].disabled = false; // Enable Next button
     currentQuestionIndex--;
     pQuestion.textContent = mockData[currentQuestionIndex].question;
@@ -107,11 +118,18 @@ buttonsFooter[0].addEventListener("click", () => {
 // Next button
 buttonsFooter[1].addEventListener("click", () => {
   if (currentQuestionIndex < mockData.length - 1) {
+    resetOptions();
     buttonsFooter[0].disabled = false; // Enable Previous button
     currentQuestionIndex++;
     pQuestion.textContent = mockData[currentQuestionIndex].question;
-    buttonsFooter[1].disabled =
-      currentQuestionIndex === mockData.length - 1;
+    buttonsFooter[1].disabled = currentQuestionIndex === mockData.length - 1;
     setAnswers(ulContainer, mockData);
   }
+});
+
+optionButtons.forEach((button) => {
+  button.addEventListener("click", (e) => {
+    resetOptions();
+    button.style.background = OPTIOON_SELECTED;
+  });
 });
