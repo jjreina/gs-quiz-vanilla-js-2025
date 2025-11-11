@@ -7,11 +7,17 @@ const TEXT_QUESTION_ARRAY = [
   "Who wrote Romeo and Juliet?",
   "How many planets are there in our solar system?",
 ];
-const OPTIONS_ARRAY = ["London", "Berlin", "Paris", "Madrid"];
-const BUTTONS_TEXT_ARRAY = ["Previous", "Next"];
+const ANSWERS_ARRAY = [
+  ["London", "Berlin", "Paris", "Madrid"],
+  ["Amazonas", "Nilo", "Yangtsé", "Miño"],
+  ["Jane Austen", "Cervantes", "William Shakerpeare", "Charles Dickens"],
+  ["7", "8", "9", "10"],
+];
+const TEXT_BUTTONS_ARRAY = ["Previous", "Next"];
 
 let currentQuestionIndex = 0;
 
+/********* Design *******/
 const body = document.querySelector("body");
 
 const h2Title = document.createElement("h2");
@@ -60,10 +66,20 @@ const createFooter = (textButtons) => {
 
 divContainer.appendChild(h2Title);
 divContainer.appendChild(pQuestion);
-let ulContainer = createUl(OPTIONS_ARRAY);
+let ulContainer = createUl(ANSWERS_ARRAY[currentQuestionIndex]);
 divContainer.appendChild(ulContainer);
-divContainer.appendChild(createFooter(BUTTONS_TEXT_ARRAY));
+divContainer.appendChild(createFooter(TEXT_BUTTONS_ARRAY));
 body.appendChild(divContainer);
+
+/********* Funcionality ***************/
+
+// Set answers in the ulContainer list element
+const setAnswers = (ulContainer, ANSWERS_ARRAY) => {
+  Array.from(ulContainer.children).forEach((liAnswer, index) => {
+    liAnswer.firstChild.textContent =
+      ANSWERS_ARRAY[currentQuestionIndex][index];
+  });
+};
 
 // Previous button
 buttonsFooter[0].addEventListener("click", () => {
@@ -72,6 +88,7 @@ buttonsFooter[0].addEventListener("click", () => {
     currentQuestionIndex--;
     pQuestion.textContent = TEXT_QUESTION_ARRAY[currentQuestionIndex];
     buttonsFooter[0].disabled = currentQuestionIndex === 0;
+    setAnswers(ulContainer, ANSWERS_ARRAY);
   }
 });
 
@@ -83,5 +100,6 @@ buttonsFooter[1].addEventListener("click", () => {
     pQuestion.textContent = TEXT_QUESTION_ARRAY[currentQuestionIndex];
     buttonsFooter[1].disabled =
       currentQuestionIndex === TEXT_QUESTION_ARRAY.length - 1;
+    setAnswers(ulContainer, ANSWERS_ARRAY);
   }
 });
