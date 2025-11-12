@@ -170,18 +170,10 @@ buttonsFooter[1].addEventListener("click", () => {
   }
 });
 
-// Devolvemos el id del mockData que contiene la pregunta que se le pasa como argumento
-let findQuestionId = (stringQuestion) => {
-  return mockData.findIndex(
-    (questionObject) => questionObject.question === stringQuestion
-  );
-};
-
 optionButtons.forEach((button) => {
   button.addEventListener("click", (e) => {
     button.style.background = OPTION_SELECTED;
-    storageAnswerSelected[findQuestionId(pQuestion.textContent)] =
-      e.target.textContent;
+    storageAnswerSelected[currentQuestionIndex] = e.target.textContent;
     resetOptions();
     enableCheckButton();
   });
