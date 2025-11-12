@@ -4,10 +4,12 @@ const mockData = [
   {
     question: "What is the capital of France?",
     options: ["London", "Berlin", "Paris", "Madrid"],
+    optionCorrect: "Paris",
   },
   {
     question: "What is the longest river in the world?",
     options: ["Amazonas", "Nilo", "Yangtsé", "Miño"],
+    optionCorrect: "Amazonas",
   },
   {
     question: "Who wrote Romeo and Juliet?",
@@ -17,10 +19,12 @@ const mockData = [
       "William Shakerpeare",
       "Charles Dickens",
     ],
+    optionCorrect: "William Shakerpeare",
   },
   {
     question: "How many planets are there in our solar system?",
     options: ["7", "8", "9", "10"],
+    optionCorrect: "8",
   },
 ];
 
@@ -28,7 +32,7 @@ let storageAnswerSelected = [];
 
 const TEXT_TITLE = "Quiz Question";
 
-const TEXT_BUTTONS_ARRAY = ["Previous", "Next"];
+const TEXT_BUTTONS_ARRAY = ["Previous", "Next", "Check"];
 
 const OPTION_SELECTED = "#3CB371";
 
@@ -78,6 +82,7 @@ const createFooter = (textButtons) => {
   buttonsFooter = textButtons.map((textButton) => {
     let button = createButton(textButton, "footer-btn");
     if (textButton === "Previous") button.disabled = true;
+    if (textButton === "Check") button.disabled = true;
     divFooter.appendChild(button);
     return button;
   });
@@ -107,6 +112,13 @@ const resetOptions = () => {
       ? (button.style.background = OPTION_SELECTED)
       : button.removeAttribute("style");
   });
+};
+
+const enableCheckButton = () => {
+  buttonsFooter[2].disabled = !(
+    // filter(Boolean) removes all falsy(null, undefined, "", empty) values from an array
+    (storageAnswerSelected.filter(Boolean).length === mockData.length)
+  );
 };
 
 // Previous button
@@ -146,5 +158,15 @@ optionButtons.forEach((button) => {
     storageAnswerSelected[findQuestionId(pQuestion.textContent)] =
       e.target.textContent;
     resetOptions();
+    enableCheckButton();
   });
+});
+
+// Check button
+buttonsFooter[2].addEventListener("click", () => {
+  let correctAnswers = 0;
+  storageAnswerSelected.forEach((answer, index) => {
+    if (answer === mockData[index].optionCorrect) correctAnswers++;
+  });
+  alert(correctAnswers + " correct answers from " + mockData.length);
 });
