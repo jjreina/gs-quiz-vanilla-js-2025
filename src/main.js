@@ -96,6 +96,31 @@ divContainer.appendChild(ulContainer);
 divContainer.appendChild(createFooter(TEXT_BUTTONS_ARRAY));
 body.appendChild(divContainer);
 
+const createModal = () => {
+  const divModal = document.createElement("div");
+  divModal.className = "modal";
+  const divModalContent = document.createElement("div");
+  divModalContent.className = "modal-content";
+  const h2Modal = document.createElement("h2");
+  h2Modal.textContent = "Results";
+  const spanModal = document.createElement("span");
+  spanModal.className = "modal-close";
+  spanModal.textContent = "X";
+  const hrModal = document.createElement("hr");
+  const pModal = document.createElement("p");
+
+  divModalContent.appendChild(h2Modal);
+  divModalContent.appendChild(hrModal);
+  divModalContent.appendChild(pModal);
+  divModalContent.appendChild(spanModal);
+  divModal.appendChild(divModalContent);
+
+  return divModal;
+};
+
+let modal = createModal();
+body.appendChild(modal);
+
 /********* Funcionality ***************/
 
 // Set answers in the ulContainer list element
@@ -168,5 +193,26 @@ buttonsFooter[2].addEventListener("click", () => {
   storageAnswerSelected.forEach((answer, index) => {
     if (answer === mockData[index].optionCorrect) correctAnswers++;
   });
-  alert(correctAnswers + " correct answers from " + mockData.length);
+  let pModal = document.querySelector(".modal-content p");
+  pModal.textContent = `You have ${correctAnswers} correct answers out of ${mockData.length}`;
+
+  modal.style.opacity = "1";
+  modal.style.visibility = "visible";
+});
+
+const closeModal = () => {
+  modal.style.opacity = "0";
+  modal.style.visibility = "hidden";
+};
+
+// Close modal
+document.querySelector(".modal-close").addEventListener("click", () => {
+  closeModal();
+});
+
+// Close modal when click outside
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    closeModal();
+  }
 });
